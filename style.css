@@ -395,3 +395,44 @@ table.rep-table td.num, table.rep-table th.num { text-align: right; }
 }
 .modal-box h2 { margin-top: 0; color: var(--green-900); }
 .modal-box p { font-size: 13.5px; color: var(--gray-500); }
+
+/* ---------- ÁREA DE IMPRESSÃO / GERAR PDF ---------- */
+#printArea { display: none; }
+
+.print-header { margin-bottom: 16px; }
+.print-header h1 { margin: 0 0 4px; font-size: 18px; }
+.print-header h2 { margin: 0 0 6px; font-size: 15px; }
+.print-header p { margin: 2px 0; font-size: 12px; }
+.print-header .print-date { color: #666; font-style: italic; }
+
+@media print {
+  /* esconde tudo... */
+  body * { visibility: hidden; }
+  /* ...e mostra só a área de impressão */
+  #printArea, #printArea * { visibility: visible; }
+  #printArea {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 12px;
+  }
+
+  /* garante leitura em preto e branco, mesmo sem "imprimir cores de fundo" ligado */
+  #printArea .report-block,
+  #printArea .resumo-final,
+  #printArea .grand-total-box,
+  #printArea .fechamento-grid .fitem {
+    background: #fff !important;
+    color: #000 !important;
+    border: 1px solid #000 !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+  #printArea h1, #printArea h2, #printArea h3, #printArea h4 { color: #000 !important; }
+  #printArea .fechamento-grid .fitem .lbl,
+  #printArea .fechamento-grid .fitem .val { color: #000 !important; }
+  #printArea table.rep-table th, #printArea table.rep-table td { color: #000 !important; border-color: #000 !important; }
+  #printArea .report-block { margin-bottom: 14px; }
+}
