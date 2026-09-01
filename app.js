@@ -171,6 +171,84 @@ async function renderInicio() {
     cont.innerHTML = `<div class="empty-state">Nenhum lançamento registrado ainda.</div>`;
   }
   ultimos.forEach((l) => cont.appendChild(lancItemEl(l, false)));
+
+  populateDashMesAno();
+  renderDashboardInicio();
+}
+
+/* ---------------- Dashboard de vendas do mês (tela Início) ---------------- */
+function populateDashMesAno() {
+  const selMes = document.getElementById("dashMes");
+  const inputAno = document.getElementById("dashAno");
+  const hoje = new Date();
+
+  if (!selMes.dataset.montado) {
+    selMes.innerHTML = MESES.map((m, i) => `<option value="${i + 1}">${m}</option>`).join("");
+    selMes.value = hoje.getMonth() + 1;
+    selMes.dataset.montado = "1";
+  }
+  if (!inputAno.value) inputAno.value = hoje.getFullYear();
+
+  selMes.onchange = renderDashboardInicio;
+  inputAno.onchange = renderDashboardInicio;
+}
+
+function renderDashboardInicio() {
+  const mes = Number(document.getElementById("dashMes").value);
+  const ano = Number(document.getElementById("dashAno").value);
+  const cont = document.getElementById("dashResultado");
+  cont.innerHTML = "";
+  if (!ano) return;
+
+  const doMes = CACHE.lancamentos.filter((l) => {
+    const [y, m] = l.data.split("-").map(Number);
+    return y === ano && m === mes;
+  });
+
+  if (doMes.length === 0) {
+    cont.innerHTML = `<div class="empty-state">Nenhuma venda em ${MESES[mes - 1]}/${ano}.</div>`;
+    return;
+  }
+
+  const porPatrao = {};
+  const porComprador = {};
+  let totalGeral = 0;
+  doMes.forEach((l) => {
+    porPatrao[l.patraoId] = (porPatrao[l.patraoId] || 0) + l.vTotal;
+    porComprador[l.compradorId] = (porComprador[l.compradorId] || 0) + l.vTotal;
+    totalGeral += l.vTotal;
+  });
+
+  const linhasPatrao = Object.keys(porPatrao)
+    .sort((a, b) => porPatrao[b] - porPatrao[a])
+    .map((id) => `<tr><td>${nomePatrao(Number(id))}</td><td class="num">${fmtBRL(porPatrao[id])}</td></tr>`)
+    .join("");
+
+  const linhasComprador = Object.keys(porComprador)
+    .sort((a, b) => porComprador[b] - porComprador[a])
+    .map((id) => `<tr><td>${nomeComprador(Number(id))}</td><td class="num">${fmtBRL(porComprador[id])}</td></tr>`)
+    .join("");
+
+  cont.innerHTML = `
+    <div class="report-block">
+      <h3>👨‍🌾 Por Patrão</h3>
+      <table class="rep-table">
+        <thead><tr><th>Patrão</th><th class="num">Total</th></tr></thead>
+        <tbody>${linhasPatrao}</tbody>
+      </table>
+    </div>
+    <div class="report-block">
+      <h3>🏪 Por Comprador</h3>
+      <table class="rep-table">
+        <thead><tr><th>Comprador</th><th class="num">Total</th></tr></thead>
+        <tbody>${linhasComprador}</tbody>
+      </table>
+    </div>
+    <div class="grand-total-box">
+      TOTAL VENDIDO NO MÊS
+      <span class="valor">${fmtBRL(totalGeral)}</span>
+    </div>
+  `;
 }
 
 function lancItemEl(l, permitirExcluir = true) {
