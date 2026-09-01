@@ -1,52 +1,60 @@
 name: Gerar APK Android
- 
+
 on:
-  workflow_dispatch:      # permite rodar manualmente pelo botão "Run workflow"
+  workflow_dispatch:
   push:
-    branches: [ main ]    # roda automaticamente a cada push na branch main
- 
+    branches: [ main ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Baixar o código do repositório
         uses: actions/checkout@v4
- 
+
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
- 
+
       - name: Configurar Java (necessário para o Android)
         uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 21
- 
+
       - name: Configurar o Android SDK
         uses: android-actions/setup-android@v3
- 
-      - name: Instalar dependências do Capacitor
+
+      - name: Instalar dependências do Capacitor e impressora PDF
         run: npm install
- 
+
       - name: Preparar a pasta web (www) com os arquivos do app
         run: |
           mkdir -p www
-          cp index.html style.css app.js manifest.json service-worker.js www/
+          cp index.html style.css app.js manifest.json service-worker.js pdf-bridge.js www/
           cp -r icons www/
- 
+
+      - name: Gerar bundle local do plugin de impressão
+        run: |
+          npx --yes esbuild node_modules/@capgo/capacitor-printer/dist/esm/index.js \
+            --bundle \
+            --format=iife \
+            --global-name=CapacitorPrinter \
+            --outfile=www/capacitor-printer.bundle.js
+
       - name: Criar o projeto Android com o Capacitor
         run: npx cap add android
- 
-      - name: Sincronizar os arquivos web com o projeto Android
+
+      - name: Sincronizar os arquivos web e plugins com o Android
         run: npx cap sync android
- 
+
       - name: Gerar o APK (versão de teste/debug)
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
- 
+
       - name: Disponibilizar o APK gerado para download
         uses: actions/upload-artifact@v4
         with:
