@@ -163,6 +163,7 @@
       </div>
       <select id="relCompSelect"><option value="">Todos os compradores</option></select>
       <div id="relCompResultado"></div>
+      <button type="button" id="btnPdfComprador" class="btn btn-primary btn-block">📄 Gerar PDF deste relatório</button>
     </div>
   </section>
 
@@ -204,6 +205,9 @@
 </div>
 
 <input type="hidden" id="editandoLancamentoId" value="">
+
+<!-- Usado só na hora de gerar o PDF (impressão). Fica vazio e escondido o resto do tempo. -->
+<div id="printArea"></div>
 
 <script src="app.js"></script>
 </body>
