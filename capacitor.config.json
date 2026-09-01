@@ -1,0 +1,8 @@
+{
+  "appId": "br.com.marlonleal.colheita",
+  "appName": "Colheita e Vendas",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  }
+}
