@@ -69,7 +69,6 @@
       <button class="subtab-btn" data-subtab="compradores">Compradores</button>
     </div>
 
-    <!-- Patrões -->
     <div id="subtab-patroes" class="subtab-content">
       <form id="formPatrao" class="inline-form">
         <input type="text" id="inputNomePatrao" placeholder="Nome do patrão (ex: Patrick)" required>
@@ -78,7 +77,6 @@
       <div id="listaPatroes" class="list-cards"></div>
     </div>
 
-    <!-- Compradores -->
     <div id="subtab-compradores" class="subtab-content hidden">
       <form id="formComprador" class="inline-form">
         <input type="text" id="inputNomeComprador" placeholder="Nome do comprador (ex: Roni)" required>
@@ -94,19 +92,15 @@
       <label>Data
         <input type="date" id="inputData" required>
       </label>
-
       <label>Patrão responsável
         <select id="selectPatrao" required></select>
       </label>
-
       <label>Verdura colhida
         <select id="selectVerdura" required></select>
       </label>
-
       <label>Comprador
         <select id="selectComprador" required></select>
       </label>
-
       <div class="row-2">
         <label>Unidade
           <select id="selectUnidade">
@@ -118,15 +112,12 @@
           <input type="number" id="inputQuantidade" min="0" step="0.01" required>
         </label>
       </div>
-
       <label>Valor Unitário (R$)
         <input type="number" id="inputVUnit" min="0" step="0.01" required>
       </label>
-
       <div class="total-preview">
         Valor Total: <span id="previewTotal">R$ 0,00</span>
       </div>
-
       <button type="submit" class="btn btn-primary btn-block">✅ Registrar Lançamento</button>
     </form>
 
@@ -151,7 +142,6 @@
       <button class="subtab-btn" data-subtab="rel-comprador">Por Comprador</button>
     </div>
 
-    <!-- Relatório por Patrão -->
     <div id="subtab-rel-patrao" class="subtab-content">
       <div class="filtros-row filtros-3">
         <select id="relPatraoMes"></select>
@@ -161,7 +151,6 @@
       <div id="relPatraoResultado"></div>
     </div>
 
-    <!-- Relatório por Comprador -->
     <div id="subtab-rel-comprador" class="subtab-content hidden">
       <div class="filtros-row filtros-3">
         <select id="relCompMes"></select>
@@ -213,9 +202,12 @@
 
 <input type="hidden" id="editandoLancamentoId" value="">
 
-<!-- Usado só na hora de gerar o PDF (impressão). Fica vazio e escondido o resto do tempo. -->
+<!-- Área usada pelo relatório para impressão/PDF. -->
 <div id="printArea"></div>
 
+<!-- O plugin nativo é carregado no APK pelo workflow; no navegador estes arquivos são inofensivos. -->
+<script src="capacitor-printer.bundle.js"></script>
+<script src="pdf-bridge.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
