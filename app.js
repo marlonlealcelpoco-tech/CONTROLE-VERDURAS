@@ -676,6 +676,42 @@ async function renderRelatorioComprador() {
   cont.appendChild(resumo);
 }
 
+/* ---------------- Gerar PDF do Relatório por Comprador ---------------- */
+document.getElementById("btnPdfComprador").addEventListener("click", () => {
+  const resultado = document.getElementById("relCompResultado");
+  if (!resultado.innerHTML.trim()) {
+    showToast("Gere o relatório antes de exportar o PDF.");
+    return;
+  }
+
+  const mesSel = document.getElementById("relCompMes");
+  const mesNome = MESES[Number(mesSel.value) - 1] || "";
+  const ano = document.getElementById("relCompAno").value;
+
+  const verduraSel = document.getElementById("relCompVerdura");
+  const verduraTxt = verduraSel.value ? verduraSel.value : "Todas as verduras";
+
+  const compradorSel = document.getElementById("relCompSelect");
+  const compradorTxt = compradorSel.value
+    ? compradorSel.options[compradorSel.selectedIndex].text
+    : "Todos os compradores";
+
+  const agora = new Date().toLocaleString("pt-BR");
+
+  const printArea = document.getElementById("printArea");
+  printArea.innerHTML = `
+    <div class="print-header">
+      <h1>🥬 Colheita &amp; Vendas</h1>
+      <h2>Relatório por Comprador — ${mesNome}/${ano}</h2>
+      <p><b>Comprador:</b> ${compradorTxt} &nbsp;|&nbsp; <b>Verdura:</b> ${verduraTxt}</p>
+      <p class="print-date">Gerado em ${agora}</p>
+    </div>
+    ${resultado.innerHTML}
+  `;
+
+  window.print();
+});
+
 /* ============================================================
    BACKUP / RESTAURAR
 ============================================================ */
